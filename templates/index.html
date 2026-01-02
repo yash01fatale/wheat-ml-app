@@ -1,72 +1,220 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Wheat ML Predictor</title>
+    <meta charset="UTF-8">
+    <title>Wheat Classification ML App</title>
+
     <style>
         body {
-            background: linear-gradient(120deg, #2c3e50, #27ae60);
-            font-family: Arial;
-            padding: 40px;
-            color: white;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #1d976c, #93f9b9);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .card {
+
+        .container {
             background: #ffffff;
-            color: black;
-            padding: 25px;
-            width: 420px;
-            margin: auto;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 850px;
+            max-width: 95%;
+            border-radius: 14px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            overflow: hidden;
         }
-        input, select, button {
+
+        /* LEFT SIDE (FORM) */
+        .form-section {
+            padding: 30px;
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            color: #1d976c;
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
+            padding: 9px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
         }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1d976c;
+        }
+
         button {
-            background: #27ae60;
-            color: white;
+            width: 100%;
+            margin-top: 10px;
+            padding: 11px;
             font-size: 16px;
+            font-weight: bold;
+            background: #1d976c;
+            color: white;
             border: none;
+            border-radius: 8px;
             cursor: pointer;
         }
-        h2 {
-            text-align: center;
+
+        button:hover {
+            background: #157a56;
         }
-        .result {
-            margin-top: 15px;
-            padding: 10px;
-            background: #ecf0f1;
-            border-radius: 6px;
+
+        /* RIGHT SIDE (OUTPUT) */
+        .output-section {
+            background: #f4f8f6;
+            padding: 30px;
+            border-left: 1px solid #ddd;
+        }
+
+        .output-box {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .output-box h3 {
+            margin-top: 0;
+            color: #1d976c;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        /* Simple bars (visual hint) */
+        .bar {
+            height: 10px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .bar span {
+            display: block;
+            height: 100%;
+            background: #1d976c;
         }
     </style>
 </head>
+
 <body>
 
-<div class="card">
-    <h2>🌾 Wheat Classification ML App</h2>
+<div class="container">
 
-    <form method="POST">
-        {% for i in range(1,8) %}
-        <input type="number" step="any" name="f{{i}}" placeholder="Feature {{i}}" required>
-        {% endfor %}
+    <!-- INPUT FORM -->
+    <div class="form-section">
+        <h1>🌾 Wheat Classification</h1>
 
-        <select name="model">
-            <option>Decision Tree</option>
-            <option>Random Forest</option>
-            <option>Logistic Regression</option>
-        </select>
+        <form method="POST">
 
-        <button type="submit">Predict</button>
-    </form>
+            <div class="field">
+                <label>Area</label>
+                <input type="number" step="any" name="f1" required>
+            </div>
 
-    {% if prediction %}
-    <div class="result">
-        <p><strong>Model:</strong> {{ model_name }}</p>
-        <p><strong>Prediction:</strong> {{ prediction }}</p>
-        <p><strong>Accuracy:</strong> {{ accuracy }}%</p>
+            <div class="field">
+                <label>Perimeter</label>
+                <input type="number" step="any" name="f2" required>
+            </div>
+
+            <div class="field">
+                <label>Compactness</label>
+                <input type="number" step="any" name="f3" required>
+            </div>
+
+            <div class="field">
+                <label>Kernel Length</label>
+                <input type="number" step="any" name="f4" required>
+            </div>
+
+            <div class="field">
+                <label>Kernel Width</label>
+                <input type="number" step="any" name="f5" required>
+            </div>
+
+            <div class="field">
+                <label>Asymmetry Coefficient</label>
+                <input type="number" step="any" name="f6" required>
+            </div>
+
+            <div class="field">
+                <label>Kernel Groove Length</label>
+                <input type="number" step="any" name="f7" required>
+            </div>
+
+            <div class="field">
+                <label>Select Model</label>
+                <select name="model">
+                    <option>Decision Tree</option>
+                    <option>Random Forest</option>
+                    <option>Logistic Regression</option>
+                </select>
+            </div>
+
+            <button type="submit">Predict Wheat Type</button>
+        </form>
     </div>
-    {% endif %}
+
+    <!-- OUTPUT -->
+    <div class="output-section">
+
+        {% if prediction %}
+        <div class="output-box">
+            <h3>Prediction Result</h3>
+            <p><strong>Model Used:</strong> {{ model_name }}</p>
+            <p><strong>Predicted Class:</strong> {{ prediction }}</p>
+            <p><strong>Model Accuracy:</strong> {{ accuracy }}%</p>
+
+            <div class="bar">
+                <span style="width: {{ accuracy }}%;"></span>
+            </div>
+        </div>
+
+        <div class="output-box">
+            <h3>Visualization (Conceptual)</h3>
+            <p>
+                This model analyzes geometric features of wheat kernels such as
+                area, perimeter, and compactness to classify wheat types.
+            </p>
+            <p style="font-size:13px;color:#555;">
+            </p>
+        </div>
+
+        {% else %}
+        <div class="placeholder">
+            🔍 Enter feature values and click <b>Predict</b> to see results here.
+        </div>
+        {% endif %}
+
+    </div>
+
 </div>
 
 </body>
