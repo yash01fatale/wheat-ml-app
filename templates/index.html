@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wheat ML Predictor</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #2c3e50, #27ae60);
+            font-family: Arial;
+            padding: 40px;
+            color: white;
+        }
+        .card {
+            background: #ffffff;
+            color: black;
+            padding: 25px;
+            width: 420px;
+            margin: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+        }
+        button {
+            background: #27ae60;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        h2 {
+            text-align: center;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background: #ecf0f1;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🌾 Wheat Classification ML App</h2>
+
+    <form method="POST">
+        {% for i in range(1,8) %}
+        <input type="number" step="any" name="f{{i}}" placeholder="Feature {{i}}" required>
+        {% endfor %}
+
+        <select name="model">
+            <option>Decision Tree</option>
+            <option>Random Forest</option>
+            <option>Logistic Regression</option>
+        </select>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        <p><strong>Model:</strong> {{ model_name }}</p>
+        <p><strong>Prediction:</strong> {{ prediction }}</p>
+        <p><strong>Accuracy:</strong> {{ accuracy }}%</p>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
